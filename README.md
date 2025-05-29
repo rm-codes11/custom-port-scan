@@ -58,3 +58,34 @@ Important: This tool should only be used:
 - For legitimate security assessments
 
 <b>Unauthorized scanning may violate laws and network policies.</b>
+
+```mermaid
+flowchart TD
+    A([Start]) --> B[Parse Command Line Args]
+    B --> C{Target Valid?}
+    C -->|No| D[Show Error & Exit]
+    C -->|Yes| E[Resolve Hostname]
+    E --> F[Initialize Scan]
+    F --> G{Scan Type?}
+    G -->|TCP| H[Run TCP Scanner]
+    G -->|UDP| I[Run UDP Scanner]
+    G -->|All| H & I
+    H --> J[Detect Services]
+    I --> J
+    J --> K[OS Fingerprinting]
+    K --> L[Generate Report]
+    L --> M[Export JSON]
+    M --> N([End])
+
+    subgraph TCP Scanner
+        H --> T1[Create Thread Pool]
+        T1 --> T2[Scan Ports]
+        T2 --> T3[Check Responses]
+    end
+
+    subgraph UDP Scanner
+        I --> U1[Create Thread Pool]
+        U1 --> U2[Send UDP Probes]
+        U2 --> U3[Check Responses]
+    end
+```
